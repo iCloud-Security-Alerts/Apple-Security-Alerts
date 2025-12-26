@@ -32,7 +32,8 @@ const AppIconGrid = () => {
 
   return (
     <div className="flex flex-wrap justify-center gap-3 max-w-md mx-auto">
-      {apps.map((app, index) => (
+      {/* Safety check added below with apps?.map */}
+      {apps?.map((app, index) => (
         <div
           key={index}
           className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 cursor-pointer"
