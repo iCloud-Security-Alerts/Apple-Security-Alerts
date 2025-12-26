@@ -1,18 +1,18 @@
-import express from 'express';
-import config from './config';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.css';
 
-const app = express();
-app.use(express.json()); // Parse incoming request bodies as JSON
+// This is the critical 'Mounting' logic
+const rootElement = document.getElementById('root');
 
-app.post('/submit', (req, res) => {
-  const formData = req.body;
-  console.log(formData);
-  saveFormData(formData);
-  res.send('Form submitted successfully!');
-});
-
-// Start the server
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
-});
+if (!rootElement) {
+  console.error("Failed to find the root element. Check your index.html for <div id='root'></div>");
+} else {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}
