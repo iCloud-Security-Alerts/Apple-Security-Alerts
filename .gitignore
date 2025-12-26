@@ -1,0 +1,5 @@
+node_modules/
+activity_log.txt
+.env
+dist/
+*.tsbuildinfo
