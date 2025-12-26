@@ -1,12 +1,21 @@
-import { Pool } from 'pg';
+export async function saveFormData(formData: any) {
+  // Detect if we are running locally or on Vercel
+  const isLocal = window.location.hostname === 'localhost';
+  const endpoint = isLocal 
+    ? 'http://localhost:5000/log' 
+    : '/api/log';
 
-const db = new Pool(config.env.DATABASE_URL);
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
 
-function saveFormData(formData) {
-  // Connect to your database here...
-  const query = 'INSERT INTO form_data (name, email) VALUES ($1, $2)';
-  db.query(query, [formData.name, formData.email], (err, result) => {
-    if (err) console.error(err);
-    else console.log(`Form data saved successfully!`);
-  });
+    if (response.ok) {
+      console.log(`Successfully logged to ${isLocal ? 'Local' : 'Vercel'} Sink`);
+    }
+  } catch (error) {
+    console.error('Logging Error:', error);
+  }
 }
