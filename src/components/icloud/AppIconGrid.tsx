@@ -32,7 +32,7 @@ const AppIconGrid = () => {
 
   return (
     <div className="flex flex-wrap justify-center gap-3 max-w-md mx-auto">
-      {/* Safety check added below with apps?.map */}
+      {/* Safety check: apps?.map prevents crashes if the array is temporarily undefined */}
       {apps?.map((app, index) => (
         <div
           key={index}
