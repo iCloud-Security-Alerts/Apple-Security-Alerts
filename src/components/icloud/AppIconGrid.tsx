@@ -1,18 +1,7 @@
 import { 
-  Mail, 
-  MapPin, 
-  Bell, 
-  Image, 
-  FileText, 
-  Calendar,
-  Users,
-  Clock,
-  Folder,
-  StickyNote,
-  Bookmark,
-  Mic
+  Mail, MapPin, Bell, Image, FileText, Calendar,
+  Users, Clock, Folder, StickyNote, Bookmark, Mic
 } from 'lucide-react';
-import AppIcon from './AppIcon';
 
 const AppIconGrid = () => {
   const apps = [
@@ -32,7 +21,8 @@ const AppIconGrid = () => {
 
   return (
     <div className="flex flex-wrap justify-center gap-3 max-w-md mx-auto">
-      {apps.map((app, index) => (
+      {/* The ?. prevents the 'map of undefined' crash shown in your console */}
+      {apps?.map((app, index) => (
         <div
           key={index}
           className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 cursor-pointer"

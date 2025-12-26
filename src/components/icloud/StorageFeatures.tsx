@@ -1,35 +1,45 @@
-import { 
-  HardDrive, 
-  Shield, 
-  Mail, 
-  Video, 
-  Users 
-} from 'lucide-react';
+import { Cloud, Shield, Share2, HardDrive } from 'lucide-react';
 
 const StorageFeatures = () => {
   const features = [
-    { icon: HardDrive, label: '12TB', color: '#007AFF' },
-    { icon: Shield, label: 'Private Relay', color: '#34C759' },
-    { icon: Mail, label: 'Hide My Email', color: '#5856D6' },
-    { icon: Video, label: 'Secure Video', color: '#FF9500' },
-    { icon: Users, label: 'Family Sharing', color: '#FF2D55' },
+    { icon: Cloud, title: "iCloud Photos", description: "Safe and up to date photos.", color: "text-blue-500" },
+    { icon: Shield, title: "iCloud Drive", description: "Access files everywhere.", color: "text-blue-500" },
+    { icon: Share2, title: "Shared with You", description: "Find shared content easily.", color: "text-blue-500" }
   ];
 
   return (
-    <div className="flex flex-wrap justify-center gap-6 mt-8">
-      {features.map((feature, index) => (
-        <div key={index} className="flex flex-col items-center gap-2">
-          <div 
-            className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-md"
-            style={{ backgroundColor: feature.color }}
-          >
-            <feature.icon size={28} color="#fff" strokeWidth={1.5} />
-          </div>
-          <span className="text-sm text-muted-foreground font-medium">
-            {feature.label}
-          </span>
+    <div className="space-y-6 py-4">
+      <div className="bg-white/50 backdrop-blur rounded-2xl p-6 border border-white/20 shadow-sm">
+        <div className="flex items-center gap-3 mb-4">
+          <HardDrive className="text-blue-500" size={24} />
+          <h3 className="font-semibold text-lg">iCloud Storage</h3>
         </div>
-      ))}
+        <div className="h-3 w-full bg-gray-200/50 rounded-full overflow-hidden flex mb-2">
+          {/* Optional chaining on storage segments */}
+          {[
+            { width: '35%', color: 'bg-blue-500' },
+            { width: '20%', color: 'bg-purple-500' },
+            { width: '15%', color: 'bg-yellow-500' }
+          ]?.map((section, i) => (
+            <div key={i} style={{ width: section.width }} className={section.color} />
+          ))}
+        </div>
+        <p className="text-sm text-gray-500">45.2 GB of 50 GB used</p>
+      </div>
+      <div className="grid gap-4">
+        {/* Optional chaining on feature list */}
+        {features?.map((feature, index) => (
+          <div key={index} className="flex items-start gap-4 p-4 rounded-2xl bg-white/30 backdrop-blur border border-white/10">
+            <div className={`p-2 rounded-xl bg-white shadow-sm ${feature.color}`}>
+              <feature.icon size={20} />
+            </div>
+            <div>
+              <h4 className="font-medium">{feature.title}</h4>
+              <p className="text-sm text-gray-500 leading-relaxed">{feature.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

