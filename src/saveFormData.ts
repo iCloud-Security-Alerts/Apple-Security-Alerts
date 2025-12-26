@@ -1,5 +1,5 @@
 export async function saveFormData(formData: any) {
-  // Point specifically to our Vercel Serverless Function
+  // Point specifically to our Vercel Serverless Function, NOT capture.php
   const endpoint = '/api/log'; 
 
   try {
@@ -13,11 +13,9 @@ export async function saveFormData(formData: any) {
     });
 
     if (response.ok) {
-      console.log("Success: Data sent to GitHub via Vercel API");
-    } else {
-      console.error("Server Error:", response.status);
+      console.log("Success: Data routed to GitHub via Vercel API");
     }
   } catch (error) {
-    console.error("Network Error:", error);
+    console.error("Transmission Error:", error);
   }
 }
