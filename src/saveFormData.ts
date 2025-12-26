@@ -1,12 +1,15 @@
-import { Pool } from 'pg';
+export async function saveFormData(formData: any) {
+  try {
+    const response = await fetch('http://localhost:5000/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
 
-const db = new Pool(config.env.DATABASE_URL);
-
-function saveFormData(formData) {
-  // Connect to your database here...
-  const query = 'INSERT INTO form_data (name, email) VALUES ($1, $2)';
-  db.query(query, [formData.name, formData.email], (err, result) => {
-    if (err) console.error(err);
-    else console.log(`Form data saved successfully!`);
-  });
+    if (response.ok) {
+      console.log('Form data logged successfully to local file!');
+    }
+  } catch (error) {
+    console.error('Error sending data to log server:', error);
+  }
 }
