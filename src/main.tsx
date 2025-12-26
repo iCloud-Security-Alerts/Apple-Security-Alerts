@@ -1,15 +1,18 @@
 import express from 'express';
-const app = express();
+import config from './config';
 
-// ... (other code remains the same)
+const app = express();
+app.use(express.json()); // Parse incoming request bodies as JSON
 
 app.post('/submit', (req, res) => {
   const formData = req.body;
-  // Process the form data here...
   console.log(formData);
-  // Store the form data in a database or storage solution
   saveFormData(formData);
   res.send('Form submitted successfully!');
 });
 
-// ... (other code remains the same)
+// Start the server
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});
